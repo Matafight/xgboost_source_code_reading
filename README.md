@@ -56,14 +56,24 @@ C++实现反射机制;
 什么是反射？
 简单理解就是只根据类名就可以获取到该类的实例，这个特性在java和c#是原生支持的，但是C++中并不原生支持，不过可以自己实现反射特性。
 
-一个反射器应当满足以下条件：
+反射机制是实现工厂模式的一种方法，将反射机制与工厂模式结合起来理解：
+首先定义一个基类，看作是工厂，这个基类有两个static方法，一个是Register方法，一个是CreateObject方法，然后有一个全局的map，将类名映射到new这个类的方法（由类名映射到方法），基类的CreateObject方法就根据传入的类名，从map中查找该类的new方法，找到就返回new出来的该类的对象。
+假设现在有一个类B需要放到工厂中，那么B就要继承基类工厂，B要重写CreateObject方法，使得该方法返回B的实例。怎么将B注册到map呢？所谓注册就是在map中新加一条由B映射到B的CreateObject方法的映射，可以在B中重写Register方法吗？那么就是在map中新加一条记录<"B",Object * B::CreateObject>，貌似可以，不过这样的话每个类都要重写Register方法，能不能不用重写，直接调用基类的方法呢？
+还要抽象出一个类classinfo，classinfo的构造函数是classname B 和Objectconstructfn  Object* B::CreateObject()方法，注意这里的classname 和 Objectconstructfn 并不是特定的，classname 可以是 A,B,C. Objectconstructfn 也可以是A::CreateObject(),只要返回值类型是Object*就可以了。那么在map中对应的就是<classname,classinfo>了，这样就可以插入各个类了。在classinfo类中调用基类的register方法注册类B。
+
+上述方法对于需要加入工厂的类都要继承工厂的基类，会非常冗余，有没有别的简洁的方法呢？使用宏
+
+讲的这么多都是从一篇博客中看到的，直接看这个博客代码演示更好理解。
+
+一个非常好的介绍如何在C++实现反射机制的博客：http://blog.csdn.net/y1196645376/article/details/51455273
+
+
 1. 实现一个需要反射机制类的基类，基类要实现两个方法，一个是register,表示将该类注册到映射中，另一个是createobj方法，返回类对象。
 2. 工厂类中需要实现一个映射，即一个字符串对应一个类new的方法。
 3. 假设现在需要根据类名生成相应的对象，首先这个类要继承基类，并重写基类中的createObj方法，返回自身实例，
 
 使用宏简化代码：
 
-一个非常好的介绍如何在C++实现反射机制的博客：http://blog.csdn.net/y1196645376/article/details/51455273
 http://shuokay.com/2017/05/20/mxnet-parameter/
 
 
