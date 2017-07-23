@@ -2,7 +2,7 @@
 动态地给对象添加额外功能的模式，就增加功能而言，装饰者模式比子类更加灵活。假设现在有一杯咖啡，不同的人喜欢不同的口味，而且口味之间还有组合的方式，使用继承就会产生非常多的子类，而且会非常臃肿。
 
 装饰者模式的UML图：
-![](http://picture.jellythink.com/jellythinkDecoratorClass.png)
+![](http://7xiegr.com1.z0.glb.clouddn.com/decorator%20pattern.png)
 
 ### 使用场合
 - Decorator模式的一大特点是灵活，可以动态地添加或移除功能
